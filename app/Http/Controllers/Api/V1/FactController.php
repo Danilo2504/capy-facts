@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\FactResource;
+use App\Http\Resources\V1\SourceResource;
 use App\Models\Fact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FactController extends Controller
 {
@@ -13,7 +16,7 @@ class FactController extends Controller
      */
     public function index()
     {
-        return Fact::with('sources')->paginate(15);
+        return FactResource::collection(Fact::paginate(15));
     }
 
     /**
@@ -37,12 +40,12 @@ class FactController extends Controller
      */
     public function show(Fact $fact)
     {
-        return $fact;
+        return new FactResource($fact);
     }
 
-    public function newest(Fact $fact)
+    public function newest()
     {
-        return $fact;
+        return new FactResource(Fact::orderBy('created_at', 'desc')->first());
     }
 
     /**
@@ -66,6 +69,6 @@ class FactController extends Controller
      */
     public function destroy(Fact $fact)
     {
-        //
+        return $fact->delete();
     }
 }

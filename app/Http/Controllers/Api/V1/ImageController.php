@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\ImageResource;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class ImageController extends Controller
 {
@@ -13,7 +15,7 @@ class ImageController extends Controller
      */
     public function index()
     {
-        return Image::paginate(10);
+        return ImageResource::collection(Image::all());
     }
 
     /**
@@ -37,7 +39,12 @@ class ImageController extends Controller
      */
     public function show(Image $image)
     {
-        return $image;
+        return new ImageResource($image);
+    }
+
+    public function newest()
+    {
+        return new ImageResource(Image::orderBy('created_at', 'desc')->first());
     }
 
     /**

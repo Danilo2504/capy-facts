@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('scientific_name');
             $table->text('description');
-            $table->string('weight');
-            $table->string('height');
-            $table->string('length');
-            $table->text('habitat');
+            $table->string('weight', 50);
+            $table->string('height', 50);
+            $table->string('length', 50);
+            $table->json('habitat');
             $table->json('distribution');
             $table->string('conservation_status');
             $table->timestamps();

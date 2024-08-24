@@ -15,7 +15,7 @@ class FactSeeder extends Seeder
     {
         Fact::factory(20)
             ->has(
-                Source::factory(10)
+                Source::factory(2)
             )
             ->create();
     }

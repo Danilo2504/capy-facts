@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\GeneralInformationResource;
 use App\Models\GeneralInformation;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,40 @@ class GeneralInformationController extends Controller
      */
     public function index()
     {
-        return GeneralInformation::all();
+
+        // Storage::disk('public')->put('example_public.txt', 'Contenido accesible para el publico');
+        return new GeneralInformationResource(GeneralInformation::first());
+    }
+
+    public function showDataByField(string $field)
+    {
+        $allowedFields = [
+            'scientific_name',
+            'description',
+            'weight',
+            'height',
+            'length',
+            'habitat',
+            'distribution',
+            'conservation_status'
+        ];
+
+        if (!in_array($field, $allowedFields)) {
+            return response('Not found', 404);
+        }
+
+        $generalInformation = GeneralInformation::first();
+
+        if (!$generalInformation) {
+            return response()->json(['message' => 'General information not found'], 404);
+        }
+
+        $value = $generalInformation->$field;
+
+        if (is_string($value) && preg_match('/^\s*[\[\{].*[\}\]]\s*$/s', $value)) {
+            $value = json_decode($value);
+        }
+        return response()->json([$field => $value], 200);
     }
 
     /**
@@ -37,7 +71,7 @@ class GeneralInformationController extends Controller
      */
     public function show(GeneralInformation $generalInformation)
     {
-        //
+        return new GeneralInformationResource($generalInformation);
     }
 
     /**

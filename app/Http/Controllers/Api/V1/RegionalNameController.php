@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\V1\SourceResource;
-use App\Models\Source;
+use App\Http\Resources\V1\RegionalNameResource;
+use App\Models\RegionalName;
 use Illuminate\Http\Request;
 
-class SourceController extends Controller
+class RegionalNameController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return SourceResource::collection(Source::paginate(15));
+        return RegionalNameResource::collection(RegionalName::all());
     }
 
     /**
@@ -36,15 +36,21 @@ class SourceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Source $source)
+    public function show(RegionalName $regionalName)
     {
-        return new SourceResource($source);
+        return new RegionalNameResource($regionalName);
+    }
+
+    public function showByCountry(string $country)
+    {
+        $country = strtoupper($country);
+        return RegionalNameResource::collection(RegionalName::where('country', '=', $country)->get());
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Source $source)
+    public function edit(RegionalName $regionalName)
     {
         //
     }
@@ -52,7 +58,7 @@ class SourceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Source $source)
+    public function update(Request $request, RegionalName $regionalName)
     {
         //
     }
@@ -60,8 +66,8 @@ class SourceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Source $source)
+    public function destroy(RegionalName $regionalName)
     {
-        return $source->delete();
+        return $regionalName->delete();
     }
 }
